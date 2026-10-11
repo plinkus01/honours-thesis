@@ -13,7 +13,7 @@
 
 \maketitle
 
-\section{Background}
+\section{Radar and Signals Background}
 \subsection{Introduction}
 Effective target detection requires the suppression of clutter and interference. This is achieved by applying adaptive filters to the \gls{cut}.
 
@@ -27,25 +27,70 @@ Multichannel space-time array radar refers to advanced radar systems that combin
 \end{itemize}
 
 \subsection{Airborne Radar Signal Model}
-Consider an airborne radar with an along-track side looking linear array comprising $N$ antennas, with inter-element spacing $d$, transmitting $M$ pulses in a \gls{cpi} at frequency $f_{PRF}$. Let the radar be travelling at velocity $v_p$.
-For each range cell that it collects, we have a $N\times M$ grid of complex samples - one per (antenna, pulse) pair.
+Consider an airborne radar with an along-track side looking linear array comprising $N$ antennas, with inter-element spacing $d$, transmitting $M$ pulses in a \gls{cpi} at the pulse repetition frequency, $f_{PRF}$. Let the radar be travelling at velocity $v_p$.  
 
-\begin{figure}[b]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.25\linewidth]{figs/airborne_radar_signal_model.png}
+    \includegraphics[width=0.2\linewidth]{figs/airborne_radar_signal_model.png}
     \caption{Airborne Radar Signal Model}
-    \label{fig:placeholder}
+    \label{airborne_radar_signal_model}
 \end{figure}
 
+The echo of each pulse over \underline{fast-time} is sampled. A pulse travels out and back at the speed of light $c$. Thus, an echo arriving a time $t$ after transmission originates from a range $R=\frac{c t}{2}$, so each fast-time sample corresponds to a distinct range. These samples are the \underline{range gates} (or range cells), and the radar collects $N_r$ of them spanning the observed range window, as shown in Figure~\ref{airborne_radar_signal_model}.
+
+For each of the $N_r$ range gates we obtain a full $N\times M$ space-time grid - one per (antenna, pulse) pair. Stacking these across all range gates yields the $N\times M\times N_r$  \underline{data cube}. Detection is then carried out one range gate at a time: the gate currently being tested for a target is the \gls{cut}, and the detector slides this cell across all $N_r$ range gates.
+
 \subsubsection{Dimension 1: Space ($N$ antennas) encodes angle}
-A wave coming from angle $\theta$ hits each of the $N$ antennas one after another. Between each antenna in the linear array, there is an additional path length of $d\sin{\theta}$ between neighbouring elements. For a narrowband signal of wavelength $\lambda$, this path difference shows up as a phase shift of $2\pi (\frac{d}{\lambda})\sin{\theta}$ between adjacent antennae. We call this the \underline{normalised spatial frequency}: $$f_s = \frac{d}{\lambda}\sin{\theta.}$$
+A wave coming from angle $\theta$ hits each of the $N$ antennas one after another. Between each antenna in the linear array, there is an additional path length of $d\sin{\theta}$ between neighbouring elements. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{figs/path_diff.png}
+    \caption{Path Difference Derivation}
+    \label{[path_diff]}
+\end{figure}
+
+For a narrow-band signal of wavelength $\lambda$, this path difference shows up as a phase shift of $2\pi (\frac{d}{\lambda})\sin{\theta}$ between adjacent antennae. This is since, for a wave periodic in space with period $\lambda$, then one full period (one wavelength of travel) corresponds to $2\pi$ radians of phase.
+
+We call the \underline{normalised spatial frequency}: $$f_s = \frac{d}{\lambda}\sin{\theta.}$$
+
 Hence, each step along the array adds a phase of $2\pi f_s$. This leads to the \underline{spatial steering vector}: $$\vb s_\text{sp} = \left[1\quad e^{j2\pi f_s} ... \quad e^{j2\pi(N-1)f_s}\right]^T.$$
 
 \subsubsection{Dimension 2: Slow-time ($M$ pulses) encodes Doppler}
-Between pulses ($T_r$ apart), a moving target's range changes slightly, which adds a phase shift from one pulse to the next proportional to its radial velocity. Across the $M$ pulses, there is another phase ramp. This phase ramp is at the Doppler frequency, $f_d$. This \underline{normalised Doppler frequency}: $$f_d=\frac{2v_r}{c},$$ where $v_r$ is the radial velocity. This gives the \underline{temporal steering vector}: $$\vb s_\text{temp}=\left[1\quad e^{j2\pi f_d} ... \quad e^{j2\pi(M-1)f_d}\right]^T.$$
+Suppose we are looking at one range gate, across the $M$ pulses, spaced $T_r(=\frac{1}{f_{PRF}})s$ apart (slow-time). Between pulses, a \empha{moving target's} range changes slightly, which adds a phase shift from one pulse to the next proportional to its radial velocity. Across the $M$ pulses, this produces another linear phase ramp, which is what we know as the \underline{Doppler frequency shift}, where the physical Doppler frequency is given by: $$f_d=\frac{2v_r}{c},$$ where $v_r$ is the radial velocity. This is because, between consecutive pulses, the targe moved radially $\Delta R = v_rT_r$ along the line of sight. The round-trip path changes by $2\Delta R$ thus inducing a phase change of: $$\Delta\phi=\frac{2\pi}{\lambda}(2\Delta R)=\frac{4\pi}{\lambda}=2\pi f_d.$$
 
-\subsubsection{Combining Both Dimensions: Space-Time Snapshot}
+This gives the \underline{temporal steering vector}: $$\vb s_\text{temp}=\left[1\quad e^{j2\pi f_d} ... \quad e^{j2\pi(M-1)f_d}\right]^T.$$
+
+The two steering vectors therefore represent the set of phase delays the plane wave experiences, evaluated at a set of array elements (antennas), with respect to an arbitrary origin.
+
+\subsubsection{Combining both dimensions: Space-time snapshot}
 A target at a given (angle, Doppler) has a signature in both dimensions at once. The $N\times M$ \underline{spatio-temporal steering matrix} is given by the outer-product: $$\vb s = \vb s_\text{sp} \vb s_\text{temp}^T.$$
+
+This outer product matrix 
+
+
+
+
+
+
+
+\paragraph{Relating $M$ and $f_{PRF}$.}
+The $M$ pulses are slow-time samples taken at rate $f_{PRF}$, spaced by the
+pulse repetition interval $T_r = 1/f_{PRF}$. The total dwell (coherent
+processing interval) is therefore
+$$T_{CPI} = M\,T_r = \frac{M}{f_{PRF}}.$$
+These set two different quantities: $f_{PRF}$ is the slow-time sampling rate,
+fixing the unambiguous Doppler span (Nyquist) and hence the maximum
+unambiguous radial velocity $v_{\max} = \lambda f_{PRF}/4$; while $M$ fixes the
+Doppler resolution $\Delta f_d = f_{PRF}/M = 1/T_{CPI}$ (and the integration gain).
+
+\section{Detection and Statistical Theory}
+
+
+\newpage
+\section{Supporting Concepts}
+\subsection{\gls{cpi}}
+
 
 \newpage
 \section{Questions}
@@ -53,8 +98,7 @@ A target at a given (angle, Doppler) has a signature in both dimensions at once.
     \item Are we doing multichannel space-time framing (like Ingara, $L = MN$) or the single-channel temporal one (like IPIX)?
     \item Intuition behind spatial and Doppler steering vectors - then also their inner and Kronecker products.
     \item In Aboutanios 2020, we assume the speckle covariance matrix $G$ is constant across cells? Do I take this assumption too and try to estimate this constant $G$ or do I try to find varying $G$, then still use the TEN. For example, if I segment the range of $G$'s into groups where they are approximately equal, to get the texture estimate, and then to the optimum detector.
-    \item In Aboutanios 2020, it is K-distributed clutter only. So we would look at the OKD detector in the Gini 1998 paper?
-    \item Max
+    \item In Aboutanios 2020, it is K-distributed clutter only. So we would look at the OKD detector in the Gini 1998 paper?s
 \end{itemize}
 
 
