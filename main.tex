@@ -1,0 +1,61 @@
+\documentclass{article}
+
+\input{packages}
+\input{macros}
+
+\input{acronyms}
+
+\title{Thesis Workbook}
+\author{z5360316}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Background}
+\subsection{Introduction}
+Effective target detection requires the suppression of clutter and interference. This is achieved by applying adaptive filters to the \gls{cut}.
+
+\subsection{Multichannel Space-Time (STAP) Array Radar}
+Multichannel space-time array radar refers to advanced radar systems that combine multiple spatial antenna channels with temporal pulse processing—widely known as \Gls{stap}—to simultaneously filter out environmental clutter, mitigate jammers, and detect moving targets.
+\begin{itemize}
+    \item In the usual (monostatic) radar, the same $N$ elements both transmit and receive, but not at the same time and not in the same way.
+    \item Transmit and receive are time-multiplexed. In a pulsed radar, each element transmits the pulse, then a \gls{t/r} switch flips it over to receive mode to listen for the echo.
+    \item On transmit, the elements usually act together as one aperture. They radiate coherently - the phases are set so the whole array's energy adds up in one direction, forming a single transmit beam pointed where you're looking. It is effectively using the $N$ elements as one big antenna to concentrate power.
+    \item On receive, the elements are kept separate. Each element (or small subarray) has its own receiver chain and its own digitiser, producing $N$ independent channels. Those $N$ simultaneous outputs are the spatial samples - the $N$ numbers compared to measure angle and to do adaptive spatial / space-time filtering.
+\end{itemize}
+
+\subsection{Airborne Radar Signal Model}
+Consider an airborne radar with an along-track side looking linear array comprising $N$ antennas, with inter-element spacing $d$, transmitting $M$ pulses in a \gls{cpi} at frequency $f_{PRF}$. Let the radar be travelling at velocity $v_p$.
+For each range cell that it collects, we have a $N\times M$ grid of complex samples - one per (antenna, pulse) pair.
+
+\begin{figure}[b]
+    \centering
+    \includegraphics[width=0.25\linewidth]{figs/airborne_radar_signal_model.png}
+    \caption{Airborne Radar Signal Model}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsubsection{Dimension 1: Space ($N$ antennas) encodes angle}
+A wave coming from angle $\theta$ hits each of the $N$ antennas one after another. Between each antenna in the linear array, there is an additional path length of $d\sin{\theta}$ between neighbouring elements. For a narrowband signal of wavelength $\lambda$, this path difference shows up as a phase shift of $2\pi (\frac{d}{\lambda})\sin{\theta}$ between adjacent antennae. We call this the \underline{normalised spatial frequency}: $$f_s = \frac{d}{\lambda}\sin{\theta.}$$
+Hence, each step along the array adds a phase of $2\pi f_s$. This leads to the \underline{spatial steering vector}: $$\vb s_\text{sp} = \left[1\quad e^{j2\pi f_s} ... \quad e^{j2\pi(N-1)f_s}\right]^T.$$
+
+\subsubsection{Dimension 2: Slow-time ($M$ pulses) encodes Doppler}
+Between pulses ($T_r$ apart), a moving target's range changes slightly, which adds a phase shift from one pulse to the next proportional to its radial velocity. Across the $M$ pulses, there is another phase ramp. This phase ramp is at the Doppler frequency, $f_d$. This \underline{normalised Doppler frequency}: $$f_d=\frac{2v_r}{c},$$ where $v_r$ is the radial velocity. This gives the \underline{temporal steering vector}: $$\vb s_\text{temp}=\left[1\quad e^{j2\pi f_d} ... \quad e^{j2\pi(M-1)f_d}\right]^T.$$
+
+\subsubsection{Combining Both Dimensions: Space-Time Snapshot}
+A target at a given (angle, Doppler) has a signature in both dimensions at once. The $N\times M$ \underline{spatio-temporal steering matrix} is given by the outer-product: $$\vb s = \vb s_\text{sp} \vb s_\text{temp}^T.$$
+
+\newpage
+\section{Questions}
+\begin{itemize}
+    \item Are we doing multichannel space-time framing (like Ingara, $L = MN$) or the single-channel temporal one (like IPIX)?
+    \item Intuition behind spatial and Doppler steering vectors - then also their inner and Kronecker products.
+    \item In Aboutanios 2020, we assume the speckle covariance matrix $G$ is constant across cells? Do I take this assumption too and try to estimate this constant $G$ or do I try to find varying $G$, then still use the TEN. For example, if I segment the range of $G$'s into groups where they are approximately equal, to get the texture estimate, and then to the optimum detector.
+    \item In Aboutanios 2020, it is K-distributed clutter only. So we would look at the OKD detector in the Gini 1998 paper?
+    \item Max
+\end{itemize}
+
+
+\end{document}

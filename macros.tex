@@ -1,0 +1,38 @@
+% macros.tex
+% All custom commands live here.
+% Loaded from main.tex with \input{macros}, after \input{packages}.
+% (Requires the packages loaded in packages.tex: bbm, mathrsfs.)
+ 
+% --- Operators and named quantities ---
+\newcommand{\TN}{\mathsf{TN}}
+\newcommand{\var}{\mathbb{V}\mathrm{ar}}   % variance
+\newcommand{\cov}{\mathbb{C}\mathrm{ov}}   % covariance
+\newcommand{\corr}{\mathbb{C}\mathrm{orr}} % correlation
+\DeclareMathOperator*{\argmin}{argmin}
+ 
+% --- Distribution / convergence relations ---
+\newcommand{\simapprox}{\stackrel{\mathrm{approx}}{\sim}}
+\newcommand{\simiid}{\stackrel{\mathrm{iid}}{\sim}}
+\newcommand{\simiidt}{\sim_\mathrm{iid}}
+\newcommand{\cas}{\stackrel{\mathrm{a.s.}}{\longrightarrow}} % converges almost surely
+\newcommand{\cd}{\stackrel{\mathrm{d}}{\longrightarrow}}     % converges in distribution
+\newcommand{\cp}{\stackrel{\mathbb{P}}{\longrightarrow}}     % converges in probability
+ 
+% --- Font shorthands ---
+\newcommand{\bb}[1]{\mathbb{#1}}       % blackboard bold
+\newcommand{\m}[1]{\mathbf{#1}}        % upright bold (matrices)
+\newcommand{\vv}[1]{\boldsymbol{#1}}   % bold italic (vectors)   [was \v: caron accent]
+\newcommand{\mc}[1]{\mathcal{#1}}      % calligraphic            [was \c: cedilla accent]
+\newcommand{\s}[1]{\mathscr{#1}}       % script
+ 
+% --- Upright constants and differentials ---
+\newcommand{\di}{\mathrm{d}}           % differential d
+\newcommand{\e}{\mathrm{e}}            % Euler's number
+\newcommand{\iu}{\mathrm{i}\,}         % imaginary unit          [was \i: dotless i]
+\newcommand{\I}{\mathbbm{1}}           % indicator function
+\newcommand{\gvn}{\,|\,}               % "given" bar for conditionals
+ 
+% --- Add your radar / detection notation below ---
+% \newcommand{\rcs}{\sigma}            % radar cross-section
+% \newcommand{\Kdist}{\mathcal{K}}     % K-distribution
+% ...
