@@ -54,38 +54,44 @@ For a narrow-band signal of wavelength $\lambda$, this path difference shows up 
 
 We call the \underline{normalised spatial frequency}: $$f_s = \frac{d}{\lambda}\sin{\theta.}$$
 
-Hence, each step along the array adds a phase of $2\pi f_s$. This leads to the \underline{spatial steering vector}: $$\vb s_\text{sp} = \left[1\quad e^{j2\pi f_s} ... \quad e^{j2\pi(N-1)f_s}\right]^T.$$
+Hence, each step along the array adds a phase of $2\pi f_s$. This leads to the \underline{spatial steering vector}: $$\vb s_\text{sp} = \left[1\quad e^{j2\pi f_s}\quad\cdots\quad e^{j2\pi(N-1)f_s}\right]^T.$$
 
 \subsubsection{Dimension 2: Slow-time ($M$ pulses) encodes Doppler}
-Suppose we are looking at one range gate, across the $M$ pulses, spaced $T_r(=\frac{1}{f_{PRF}})s$ apart (slow-time). Between pulses, a \empha{moving target's} range changes slightly, which adds a phase shift from one pulse to the next proportional to its radial velocity. Across the $M$ pulses, this produces another linear phase ramp, which is what we know as the \underline{Doppler frequency shift}, where the physical Doppler frequency is given by: $$f_d=\frac{2v_r}{c},$$ where $v_r$ is the radial velocity. This is because, between consecutive pulses, the targe moved radially $\Delta R = v_rT_r$ along the line of sight. The round-trip path changes by $2\Delta R$ thus inducing a phase change of: $$\Delta\phi=\frac{2\pi}{\lambda}(2\Delta R)=\frac{4\pi}{\lambda}=2\pi f_d.$$
+Between pulses (spaced by the pulse repetition interval $T_r = \frac{1}{f_{PRF}}$), a
+target moving with radial velocity $v_r$ changes its range by
+$\Delta R = v_r T_r$. Since each pulse travels to the target and back,
+the round-trip path changes by $2\Delta R$, which for a wavelength $\lambda$
+appears as a phase shift from one pulse to the next of:
+$$\Delta\phi = \frac{2\pi}{\lambda}\,(2\Delta R)
+             = \frac{4\pi}{\lambda}v_r T_r = 2\pi f_d.$$
+As in the spatial case, a constant per-pulse phase step produces a phase ramp
+across the $M$ pulses; its rate is the \underline{normalised Doppler frequency}:
+$$f_d = \frac{2 v_r T_r}{\lambda} = \frac{2 v_r}{\lambda f_{PRF}},$$
+where the factor of two (absent in the spatial case) comes from the two-way
+propagation. Each pulse therefore adds a phase of $2\pi f_d$, giving the
+\underline{temporal steering vector}:
+$$\vb s_\text{temp} = \left[1 \quad e^{j2\pi f_d} \quad \cdots \quad
+   e^{j2\pi(M-1)f_d}\right]^T.$$
 
-This gives the \underline{temporal steering vector}: $$\vb s_\text{temp}=\left[1\quad e^{j2\pi f_d} ... \quad e^{j2\pi(M-1)f_d}\right]^T.$$
+Note that only the radial movement of the target is considered, since any tangential motion does not contribute to a change in range and hence has no Doppler effect.\\
 
 The two steering vectors therefore represent the set of phase delays the plane wave experiences, evaluated at a set of array elements (antennas), with respect to an arbitrary origin.
 
 \subsubsection{Combining both dimensions: Space-time snapshot}
-A target at a given (angle, Doppler) has a signature in both dimensions at once. The $N\times M$ \underline{spatio-temporal steering matrix} is given by the outer-product: $$\vb s = \vb s_\text{sp} \vb s_\text{temp}^T.$$
-
-This outer product matrix 
-
-
-
-
-
-
+A target at a given (angle, Doppler), (i.e. a spcific antenna and pulse), that sample experiences both additional phases from both effects at one. The two phases add so the complex factors multiply. The $N\times M$ \underline{spatio-temporal steering matrix} is given by the outer-product: $$\vb s = \vb s_\text{sp} \vb s_\text{temp}^T.$$
 
 \paragraph{Relating $M$ and $f_{PRF}$.}
 The $M$ pulses are slow-time samples taken at rate $f_{PRF}$, spaced by the
-pulse repetition interval $T_r = 1/f_{PRF}$. The total dwell (coherent
-processing interval) is therefore
+pulse repetition interval $T_r = \frac{1}{f_{PRF}}$. The total \underline{dwell} (coherent
+processing interval) is therefore:
 $$T_{CPI} = M\,T_r = \frac{M}{f_{PRF}}.$$
 These set two different quantities: $f_{PRF}$ is the slow-time sampling rate,
 fixing the unambiguous Doppler span (Nyquist) and hence the maximum
 unambiguous radial velocity $v_{\max} = \lambda f_{PRF}/4$; while $M$ fixes the
-Doppler resolution $\Delta f_d = f_{PRF}/M = 1/T_{CPI}$ (and the integration gain).
+Doppler resolution $\Delta f_d = \frac{f_{PRF}}{M} = \frac{1}{T_{CPI}}$ (and the integration gain).
 
 \section{Detection and Statistical Theory}
-
+\subsection{Hypothesis Test $H_0/H_1$}
 
 \newpage
 \section{Supporting Concepts}
