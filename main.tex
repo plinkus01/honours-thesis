@@ -161,25 +161,25 @@ detection performance. A detector that correctly accounts for the compound-Gauss
 nature of sea clutter would improve maritime detection --- but, as explained below,
 the \emph{optimum} such detector is not directly realisable.
 
-\subsection{Background: The Compound-Gaussian model}
+\subsection{Background: The Compound-Gaussian Model}
 Sea clutter is well modelled as a \underline{compound-Gaussian} process: the clutter
 vector factors as $\vb c = \sqrt{\tau}\,\vb q$, where the \underline{speckle}
 $\vb q\sim\mathcal{CN}(\vb 0,\m G)$ carries the fast correlation structure (through the
-covariance $\m G$) and the \underline{texture}  is a slowly-varying random power.
-Conditioned on, the interference covariance is $\m R = \tau\m G$; for
-K-distributed clutter  is Gamma-distributed. Detection performance hinges on this
+covariance $\m G$) and the \underline{texture} $\tau$ is a slowly-varying random power.
+Conditioned on $\tau$, the interference covariance is $\m R = \tau\m G$; for
+K-distributed clutter $\tau$ is Gamma-distributed. Detection performance hinges on this
 interference covariance, through the optimal filter $\vb w\propto\m R^{-1}\vb s$.
 
-\subsection{Literature Review}
+\subsection{Current Literature}
 \begin{itemize}
   \item \textbf{The optimum detector is clairvoyant.} Gini et al.\ (1998) derived the
   optimum coherent detector for K-distributed clutter (the OKD) from the
   likelihood-ratio test, but \emph{assuming the clutter statistics --- both $\m G$ and
-   --- are known}. The authors note this is an upper bound on achievable
+  $\tau$ --- are known}. The authors note this is an upper bound on achievable
   performance, since a practical system must estimate these parameters. It is therefore
   a benchmark, not a usable detector.
   \item \textbf{The texture can be estimated.} Gini and Greco (2002) retrieve the
-  texture  from measured sea clutter using a cyclostationary (CM-RELAX) approach,
+  texture $\tau$ from measured sea clutter using a cyclostationary (CM-RELAX) approach,
   and Aboutanios and Rosenberg (2020) estimate the per-cell texture and normalise it
   --- the texture-estimation-and-normalisation (TEN) detector --- to form a practical,
   adaptive detector.
@@ -194,7 +194,7 @@ interference covariance, through the optimal filter $\vb w\propto\m R^{-1}\vb s$
 Taken together, no practical scheme estimates \emph{both} compound-Gaussian covariance
 components and feeds them into the optimum detector:
 \begin{itemize}
-  \item the optimum detector requires both  and $\m G$, assumed known;
+  \item the optimum detector requires both $\tau$ and $\m G$, assumed known;
   \item existing adaptive methods estimate the \emph{texture} but \emph{assume or
   approximate the speckle covariance} $\m G$.
 \end{itemize}
@@ -220,6 +220,7 @@ Two levels of ambition are possible for the speckle-covariance estimate:
 \end{enumerate}
 This choice sets the risk and novelty of the project and is to be fixed in consultation
 with the supervisor.
+
 
 \newpage
 \section{Supporting Concepts}
@@ -292,7 +293,7 @@ $\mathrm{Cov}(\m R^{-1/2}\vv\varsigma)=\m R^{-1/2}\m R\,\m R^{-1/2}
 
 
 \newpage
-\section{Questions}
+\section{Questions, To-Do}
 \begin{itemize}
     \item Are we doing multichannel space-time framing (like Ingara, $L = MN$) or the single-channel temporal one (like IPIX)?
     \item In Aboutanios 2020, we assume the speckle covariance matrix $G$ is constant across cells? Do I take this assumption too and try to estimate this constant $G$ or do I try to find varying $G$, then still use the TEN. For example, if I segment the range of $G$'s into groups where they are approximately equal, to get the texture estimate, and then to the optimum detector.
