@@ -75,7 +75,7 @@ $$\vb s_\text{temp} = \left[1 \quad e^{j2\pi f_d} \quad \cdots \quad
 
 Note that only the radial movement of the target is considered, since any tangential motion does not contribute to a change in range and hence has no Doppler effect.\\
 
-Together, the two steering vectors capture the target's phase progression along the two axes: $\vb s_\text{sp}$ across the $N$ antennas (set by the angle) and $\vb s_\text{temp}$ across the $M$ pusles (set by the Doppler).
+Together, the two steering vectors capture the target's phase progression along the two axes: $\vb s_\text{sp}$ across the $N$ antennas (set by the angle) and $\vb s_\text{temp}$ across the $M$ pulses (set by the Doppler).
 
 \paragraph{Relating $M$ and $f_{PRF}$.}
 The $M$ pulses are slow-time samples taken at rate $f_{PRF}$, spaced by the
@@ -88,14 +88,14 @@ unambiguous radial velocity $v_{\max} = \lambda f_{PRF}/4$; while $M$ fixes the
 Doppler resolution $\Delta f_d = \frac{f_{PRF}}{M} = \frac{1}{T_{CPI}}$ (and the integration gain).
 
 \subsubsection{Combining both dimensions: Space-time snapshot}
-A target at a given (angle, Doppler), produces, at each (antenna, pulse) sample, a phase that is the sum of its spatial phase (from the angle) and its temporal phase (from the Doppler) with respect to an arbitrary reference origin. The two phases add and thus the complex factors multiply: the sample at antenna $n$, pulse $m$ carries $(\vb s_\text{sp})_n(\vb s_\text{temp})_m$.\\
+A target at a given (angle, Doppler) produces, at each (antenna, pulse) sample, a phase that is the sum of its spatial phase (from the angle) and its temporal phase (from the Doppler) with respect to an arbitrary reference origin. The two phases add and thus the complex factors multiply: the sample at antenna $n$, pulse $m$ carries $(\vb s_\text{sp})_n(\vb s_\text{temp})_m$.\\
 
 Collecting over all $(n, m)$ gives the $N\times M$ \underline{spatio-temporal steering matrix} given by the outer-product: $$\vb s = \vb s_\text{sp} \vb s_\text{temp}^T.$$
 
 \subsubsection{The Received Signal}
-The received signal for a single range gate is an $N\times M$ slice of the data cube, $$\m X = \alpha\m S + \m C + \m N,$$ where $\alpha$ is the (complex) target amplitude, $\m S=\vb s_\text{sp}\vb s_\text{temp}^T$ is the target spatio-temporal steering matrix, $\m C$ is the clutter return, $\m N$ is the thermal noise and $\alpha$ is the (complex) target amplitude.\\
+The received signal for a single range gate is an $N\times M$ slice of the data cube, $$\m X = \alpha\m S + \m C + \m N,$$ where $\m S=\vb s_\text{sp}\vb s_\text{temp}^T$ is the target spatio-temporal steering matrix, $\m C$ is the clutter return, $\m N$ is the thermal noise and $\alpha$ is the (complex) target amplitude.\\
 
-Vectorising by stacking the columns gives the length $L=NM$ received vector $$\vb x = \operatorname{vec}(\vb X) = \alpha\,\vb s + \vb c + \vb n,\qquad \vb s = \operatorname{vec}(\vb S) = \vb s_\text{temp}\otimes\vb s_\text{sp},$$ where $\vb s$ is the space-time \underline{steering vector}, $\vb c = \operatorname{vec}(\vb C)$ and $\vb n = \operatorname{vec}(\vb N)$. Writing the clutter-plus-noise (interference) as $\vv{\varsigma}=\vb c+\vb n$, $$\vb x = \alpha\,\vb s + \vv{\varsigma}.$$
+Vectorising by stacking the columns gives the length $L=NM$ received vector $$\vb x = \operatorname{vec}(\vb X) = \alpha\,\vb s + \vb c + \vb n,\qquad \vb s = \operatorname{vec}(\vb S) = \vb s_\text{temp}\otimes\vb s_\text{sp},$$ where $\vb s$ is the space-time \underline{steering vector}, $\vb c = \operatorname{vec}(\m C)$ and $\vb n = \operatorname{vec}(\m N)$. Writing the clutter-plus-noise (interference) as $\vv{\varsigma}=\vb c+\vb n$, $$\vb x = \alpha\,\vb s + \vv{\varsigma}.$$
 
 Vectorising lets us treat the joint space--time snapshot with standard vector
 detection theory, where a single $L\times L$ covariance matrix captures all spatial,
@@ -109,13 +109,13 @@ covariance matrix \begin{align}
     \m R &= \bb E[(\vv\varsigma-\vv\mu)(\vv\varsigma-\vv\mu)^H] \nonumber\\
          &= \bb E[\vv\varsigma\vv\varsigma^H], \nonumber
 \end{align} 
-since the clutter-plus-noise is zero-mean ($\vv\mu=0$), as both the speckle $\vb q$ and thermal noise $\vb n$ is is zero-mean.This covariance matrix holds every spatial, temporal and space-time correlation of the clutter-plus-noise, since $i$ and $j$ range over all $L$ samples. \\
+since the clutter-plus-noise is zero-mean ($\vv\mu=\vb 0$), as both the speckle $\vb q$ and thermal noise $\vb n$ are zero-mean.This covariance matrix holds every spatial, temporal and space-time correlation of the clutter-plus-noise, since $i$ and $j$ range over all $L$ samples. \\
 
-Under a Gaussian interference model, the optimal detector \underline{whitens} the interference with $\vb R^{-1}$ and matches to the target, giving a filter $\vb w \propto \vb R^{-1}\vb s$ and the matched-filter statistic $|\vb s^H \vb R^{-1}\vb x|^2$. See \ref{app:wmf}.\\
+Under a Gaussian interference model, the optimal detector \underline{whitens} the interference with $\vb R^{-1}$ and matches to the target, giving a filter $\vb w \propto \vb R^{-1}\vb s$ and the matched-filter statistic $|\vb s^H \vb R^{-1}\vb x|^2$. See Appendix~\ref{app:wmf}.\\
 
 In practice $\vb R$ is unknown and must be estimated from data -- typically a sample covariance matrix formed from training range gates surrounding the \gls{cut}. The quality of this estimate governs detection performance, and estimating $\vb R$ accurately (especially in heterogeneous, non-Gaussian sea clutter) is the central problem addressed in this work.
 
-\subsection{The Clutter Ridge}
+\subsection{The Clutter Ridge and Brennan's Rule}
 Because the platform moves at velocity $v_p$, a stationary clutter patch at angle $\theta$ has a non-zero relative radial velocity equal to the projection of $v_p$ onto the line of sight, $v_r(\theta)=v_p\sin\theta$. Its Doppler is therefore $$f_{d,\text{clutter}} = \frac{2 v_p \sin\theta}{\lambda}\,T_r \;\propto\; \sin\theta.$$ But the spatial frequency is also $f_s=(d/\lambda)\sin\theta\propto\sin\theta$, so clutter maps to a \underline{straight line} in the angle--Doppler
 $(f_s,f_d)$ plane --- the \underline{clutter ridge} --- with slope
 $$\beta = \frac{f_{d,\text{clutter}}}{f_s} = \frac{2 v_p T_r}{d}.$$
@@ -138,51 +138,88 @@ rank as
 $$r \approx N + \beta(M-1) \ll NM,$$
 which is the basis for reduced-rank clutter suppression.
 
-\subsection{Clutter Rank and Brennan's Rule}
-
 \newpage
 \section{Detection and Statistical Theory}
 \subsection{Hypothesis Test $H_0/H_1$}
 The target detection problem is generally formulated as a hypothesis test with the null hypothesis, $H_0$ being that the target is not present and the alternative hypothesis $H_1$ being that the target is present. The following test statistic $y$ is formed and compared to a suitable threshold, $\gamma$,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\newpage
-null hypothesis, $H_0$   = a statistical assumption stating that there is no real effect, relationship, or difference between variables, and that any observed variation in data is due to random chance or sampling error
-
-alternative hypothesis, $H_1$ = A real effect, relationship, or difference exists.
-
-$H_0$ and $H_1$ are complementary sets. $P(H_1) = 1-P(H_0)$.
-
-applying the central limit theorem (CLT):
-
-Procedure:
-1. we assume that the null hypothesis $H_0 $ is true.
-2. we define a test statistic 
-3. compute the observed significance level, p
-
-
-
-
-
-
-
-
 \newpage
 \section{Traditional Detectors}
 
+\newpage
+\section{Problem Statement and Research Gap}
+
+\subsection{Motivation}
+Detecting slow or small targets in sea clutter is difficult because sea clutter is
+\underline{non-Gaussian} (heavy-tailed and ``spiky'') and \underline{heterogeneous}
+(its statistics vary over range and time). The classical adaptive detectors --- the
+adaptive matched filter (AMF), the normalised AMF (NAMF) and Kelly's generalised
+likelihood-ratio test (GLRT) --- are all derived under a \underline{Gaussian,
+homogeneous} clutter assumption. In realistic maritime scenes this assumption is
+violated, so these detectors are mismatched and suffer a significant loss in
+detection performance. A detector that correctly accounts for the compound-Gaussian
+nature of sea clutter would improve maritime detection --- but, as explained below,
+the \emph{optimum} such detector is not directly realisable.
+
+\subsection{Background: The Compound-Gaussian model}
+Sea clutter is well modelled as a \underline{compound-Gaussian} process: the clutter
+vector factors as $\vb c = \sqrt{\tau}\,\vb q$, where the \underline{speckle}
+$\vb q\sim\mathcal{CN}(\vb 0,\m G)$ carries the fast correlation structure (through the
+covariance $\m G$) and the \underline{texture}  is a slowly-varying random power.
+Conditioned on, the interference covariance is $\m R = \tau\m G$; for
+K-distributed clutter  is Gamma-distributed. Detection performance hinges on this
+interference covariance, through the optimal filter $\vb w\propto\m R^{-1}\vb s$.
+
+\subsection{Literature Review}
+\begin{itemize}
+  \item \textbf{The optimum detector is clairvoyant.} Gini et al.\ (1998) derived the
+  optimum coherent detector for K-distributed clutter (the OKD) from the
+  likelihood-ratio test, but \emph{assuming the clutter statistics --- both $\m G$ and
+   --- are known}. The authors note this is an upper bound on achievable
+  performance, since a practical system must estimate these parameters. It is therefore
+  a benchmark, not a usable detector.
+  \item \textbf{The texture can be estimated.} Gini and Greco (2002) retrieve the
+  texture  from measured sea clutter using a cyclostationary (CM-RELAX) approach,
+  and Aboutanios and Rosenberg (2020) estimate the per-cell texture and normalise it
+  --- the texture-estimation-and-normalisation (TEN) detector --- to form a practical,
+  adaptive detector.
+  \item \textbf{But the speckle covariance is assumed, not estimated.} The TEN approach
+  handles the texture while \emph{assuming the speckle covariance $\m G$ is constant
+  (shared and homogeneous) across range cells}. This is convenient but only
+  approximate: it fails when the clutter \emph{structure} --- not merely its power ---
+  varies across the scene.
+\end{itemize}
+
+\subsection{The Research Gap}
+Taken together, no practical scheme estimates \emph{both} compound-Gaussian covariance
+components and feeds them into the optimum detector:
+\begin{itemize}
+  \item the optimum detector requires both  and $\m G$, assumed known;
+  \item existing adaptive methods estimate the \emph{texture} but \emph{assume or
+  approximate the speckle covariance} $\m G$.
+\end{itemize}
+The missing piece is a \underline{robust estimate of the speckle covariance $\m G$}
+for K-distributed clutter --- ideally one that relaxes the shared-$\m G$ assumption
+--- which, combined with a texture estimate, would turn Gini's clairvoyant optimum
+detector into a practical, adaptive one.
+
+\subsection{Aim and Contribution}
+This work develops an estimator of the speckle covariance $\m G$ for K-distributed sea
+clutter, combines it with texture estimation, and uses the result in the Gini optimum
+(OKD) detector. This realises a practical, adaptive form of the optimum
+compound-Gaussian detector, whose detection performance is then evaluated against the
+Gaussian-assuming baselines (AMF/NAMF).
+
+\subsection{Scope}
+Two levels of ambition are possible for the speckle-covariance estimate:
+\begin{enumerate}
+  \item estimate a single shared $\m G$ accurately, retaining the homogeneity
+  assumption; or
+  \item relax the shared-$\m G$ assumption, allowing $\m G$ to vary across the scene
+  (e.g.\ in piecewise-homogeneous regions).
+\end{enumerate}
+This choice sets the risk and novelty of the project and is to be fixed in consultation
+with the supervisor.
 
 \newpage
 \section{Supporting Concepts}
@@ -216,7 +253,7 @@ The output \gls{sinr} is therefore
 Dropping the constant $|\alpha|^2$, we maximise $|\vb w^H\vb s|^2/(\vb w^H\vb R\,\vb w)$.
 Factor $\vb R = \vb R^{1/2}\vb R^{1/2}$ and set $\vb u = \vb R^{1/2}\vb w$ and
 $\vb v = \vb R^{-1/2}\vb s$, so that $\vb w^H\vb s = \vb u^H\vb v$ and
-$\vb w^H\vb R\,\vb w = \vb u^H\vb u$. They simplify as such since $\m R$ is a covariance matrix and hence it is Hermitian (self-adjoint) and positive-definite (the thermal noise covariance $\sigma^2\m I$ keeps all eigenvalues $> 0$ \footnote{Thermal noise is modelled as $\vb n\sim\mathcal{CN}(\vb 0, \sigma^2\m I)$ - zero-mean and covariance $\sigma^2\m I$. This is because thermal noise comes from the receiver electronics and it has two defining properties. First, it is white noise (uncorrelated across samples), and so each channel's noise (each antenna's receiver, each pulse) is independent of others. Hence, all the off-diagonal covariance entries are zero. Second, there is equal power in every channel. The receivers are identical, so each sample has the same noise variance $\sigma^2$ The result is $\sigma^2 \m I$ has eigenvalues $>0$.}), so it has a Hermitian square root $\m R^{1/2}$ and $\m R^{1/2}$ is invertible ($\m R^{-1/2}$ exists). \\
+$\vb w^H\vb R\,\vb w = \vb u^H\vb u$. They simplify as such since $\m R$ is a covariance matrix and hence it is Hermitian (self-adjoint) and positive-definite (the thermal noise covariance $\sigma^2\m I$ keeps all eigenvalues $> 0$ \footnote{Thermal noise is modelled as $\vb n\sim\mathcal{CN}(\vb 0, \sigma^2\m I)$ - zero-mean and covariance $\sigma^2\m I$. This is because thermal noise comes from the receiver electronics and it has two defining properties. First, it is white noise (uncorrelated across samples), and so each channel's noise (each antenna's receiver, each pulse) is independent of others. Hence, all the off-diagonal covariance entries are zero. Second, there is equal power in every channel. The receivers are identical, so each sample has the same noise variance $\sigma^2$. The result is $\sigma^2 \m I$ has eigenvalues $>0$.}), so it has a Hermitian square root $\m R^{1/2}$ and $\m R^{1/2}$ is invertible ($\m R^{-1/2}$ exists). \\
 
 By the Cauchy--Schwarz inequality, which states $|\langle \vb x, \vb y\rangle| \leq \lVert \vb x\rVert\,\lVert \vb y\rVert$,
 \[
@@ -233,14 +270,9 @@ Hence the optimal filter is
 \]
 
 \paragraph{Interpretation: whiten, then match.}
-Writing $\vb w \propto \vb R^{-1/2}\big(\vb R^{-1/2}\vb s\big)$, the filter output is
-$\vb w^H\vb x = (\vb R^{-1/2}\vb s)^H(\vb R^{-1/2}\vb x)$: the factor $\vb R^{-1/2}$
-\underline{whitens} the interference (transforming its covariance to the identity)\footnote{$\text{Cov}(\m R^{-1/2}\cdot\text{Cov}(\vv\varsigma))=$\text{Cov}(\m R^{-1/2}\m R) = \bb E\left[(\m R^{-1/2}\m R^{1/2})(\m R^{-1/2}\m R^{1/2})^H\rigt] = \bb E\left[\m I\right] = \m I},
-after which a plain matched filter to the whitened target $\vb R^{-1/2}\vb s$ is
-optimal. Equivalently, in the eigenbasis of $\vb R$, the inverse $\vb R^{-1}$ strongly
-attenuates directions of large interference power (the clutter subspace) and passes
-directions of small, noise-level power --- it nulls the clutter before matching to the
-target.
+Writing $\vb w \propto \vb R^{-1/2}\big(\vb R^{-1/2}\vb s\big)$, the filter output is $\vb w^H\vb x = (\vb R^{-1/2}\vb s)^H(\vb R^{-1/2}\vb x)$: the factor $\vb R^{-1/2}$ \underline{whitens} the interference (transforming its covariance to the identity)\footnote{Using $\mathrm{Cov}(\m A\vv\varsigma)=\m A\,\mathrm{Cov}(\vv\varsigma)\,\m A^H$ with $\m A=\m R^{-1/2}$:
+$\mathrm{Cov}(\m R^{-1/2}\vv\varsigma)=\m R^{-1/2}\m R\,\m R^{-1/2}
+=\m R^{-1/2}(\m R^{1/2}\m R^{1/2})\m R^{-1/2}=\m I$, since $\m R^{-1/2}$ is Hermitian.}, after which a plain matched filter to the whitened target $\vb R^{-1/2}\vb s$ is optimal. Equivalently, in the eigenbasis of $\vb R$, the inverse $\vb R^{-1}$ strongly attenuates directions of large interference power (the clutter subspace) and passes directions of small, noise-level power --- it nulls the clutter before matching to the target.
 
 \paragraph{Remarks.}
 \begin{itemize}
@@ -263,7 +295,6 @@ target.
 \section{Questions}
 \begin{itemize}
     \item Are we doing multichannel space-time framing (like Ingara, $L = MN$) or the single-channel temporal one (like IPIX)?
-    \item Intuition behind spatial and Doppler steering vectors - then also their inner and Kronecker products.
     \item In Aboutanios 2020, we assume the speckle covariance matrix $G$ is constant across cells? Do I take this assumption too and try to estimate this constant $G$ or do I try to find varying $G$, then still use the TEN. For example, if I segment the range of $G$'s into groups where they are approximately equal, to get the texture estimate, and then to the optimum detector.
     \item In Aboutanios 2020, it is K-distributed clutter only. So we would look at the OKD detector in the Gini 1998 paper? Yes
 \end{itemize}
